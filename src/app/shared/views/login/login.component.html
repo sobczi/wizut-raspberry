@@ -1,0 +1,28 @@
+<form
+  [formGroup]="form"
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  fxFlexFill>
+  <div class="form" fxLayout="column" fxFlex>
+    <div class="header" fxLayout="row" fxLayoutAlign="center center" fxFlex>
+      Logowanie
+    </div>
+    <mat-form-field>
+      <mat-label>Nazwa użytkownika</mat-label>
+      <input matInput formControlName="username"/>
+      <mat-error *ngIf="c.username.hasError('required')">
+        To pole jest wymagane.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Hasło</mat-label>
+      <input matInput type="password" formControlName="password"/>
+      <mat-error *ngIf="c.password.hasError('required')">
+        To pole jest wymagane.
+      </mat-error>
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="center center" fxFlex>
+      <button class="submit" mat-raised-button color="primary">Zaloguj</button>
+    </div>
+  </div>
+</form>
