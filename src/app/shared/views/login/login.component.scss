@@ -1,14 +1,18 @@
 .form {
-  padding: 2.5%;
+  padding: 1.5%;
   margin: 2.5%;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .header {
   font-size: 18pt;
+  font-family: 'montserrat-medium';
+  span {
+    margin-left: -64px;
+  }
 }
 
 .submit {
