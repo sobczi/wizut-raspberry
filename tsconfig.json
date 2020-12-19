@@ -17,7 +17,12 @@
       "dom"
     ],
     "paths": {
-      "@shared/*": ["src/app/shared/*"]
+      "@shared/*": ["src/app/shared/*"],
+      "@logged/*": ["src/app/logged/*"],
+      "@auth/*": ["src/app/auth/*"],
+      "@assets/*": ["src/assets/*"],
+      "@app/*": ["src/app/*"],
+      "@env/*": ["src/environments/*"]
     }
   }
 }

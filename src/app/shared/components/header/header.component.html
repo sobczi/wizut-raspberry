@@ -1,0 +1,29 @@
+<mat-toolbar fxLayout="row" color="secondary">
+  <div fxLayout="column" fxLayoutAlign="center start">
+    <img
+      alt="wizut-logo"
+      src="assets/images/wizut.png"
+      matTooltip="Strona główna"
+      routerLink="/shared/homepage">
+  </div>
+  <div fxLayout="column" fxLayoutAlign="center end" fxFlex>
+    <button
+      *appIsNotLogged
+      mat-raised-button
+      class="primary-bg"
+      routerLink="/shared/login">
+      <mat-icon
+        svgIcon="login"
+        matTooltip="Zaloguj się"></mat-icon>
+    </button>
+    <button
+      *appIsLogged
+      mat-raised-button
+      class="primary-bg"
+      (click)="handleLogout()">
+      <mat-icon
+        svgIcon="logout"
+        matTooltip="Wyloguj się"></mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

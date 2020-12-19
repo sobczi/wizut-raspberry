@@ -1,0 +1,23 @@
+button {
+  border-radius: 25px;
+}
+
+mat-icon {
+  color: white;
+}
+
+mat-icon:hover {
+  transform: scale(1.25);
+}
+
+img:hover {
+  cursor: pointer;
+}
+
+img:focus {
+  outline: none;
+}
+
+.primary-bg {
+  background-color: #008149;
+}

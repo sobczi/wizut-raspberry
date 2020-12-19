@@ -2,7 +2,8 @@
   [formGroup]="form"
   fxLayout="row"
   fxLayoutAlign="center center"
-  fxFlexFill>
+  fxFlexFill
+  (submit)="handleSubmit()">
   <div class="form" fxLayout="column" fxFlex>
     <div
       class="header accent"
@@ -29,7 +30,11 @@
       </mat-error>
     </mat-form-field>
     <div fxLayout="row" fxLayoutAlign="center center" fxFlex>
-      <button class="submit" mat-raised-button color="accent">Zaloguj się</button>
+      <button
+        class="submit"
+        type="submit"
+        mat-raised-button
+        color="accent">Zaloguj się</button>
     </div>
   </div>
 </form>

@@ -1,12 +1,24 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
 
-import { LoginComponent } from '@shared/views/login/login.component'
+import { LoggedGuard } from '@auth/guards'
 
 const routes: Routes = [
   {
+    path: 'shared',
+    loadChildren: () =>
+      import('@shared/shared.module').then(m => m.SharedModule)
+  },
+  {
+    path: 'logged',
+    loadChildren: () =>
+      import('@logged/logged.module').then(m => m.LoggedModule),
+    canActivate: [LoggedGuard]
+  },
+  {
     path: '**',
-    component: LoginComponent
+    loadChildren: () =>
+      import('@shared/shared.module').then(m => m.SharedModule)
   }
 ]
 
