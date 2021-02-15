@@ -3,19 +3,21 @@
   margin: 2.5%;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   max-width: 500px;
 }
 
 .header {
   font-size: 18pt;
-  font-family: 'montserrat-medium';
+  font-family: "montserrat-medium";
+  padding-bottom: 15px;
   span {
     margin-left: -64px;
   }
 }
 
 .submit {
+  margin-top: 15px;
   border-radius: 25px;
   min-width: 150px;
 }
