@@ -4,26 +4,36 @@
       alt="wizut-logo"
       src="assets/images/wizut.png"
       matTooltip="Strona główna"
-      routerLink="/shared/homepage">
+      routerLink="/shared/homepage"
+    />
   </div>
-  <div fxLayout="column" fxLayoutAlign="center end" fxFlex>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px" fxFlex>
+    <button
+      *appIsLogged
+      mat-raised-button
+      class="primary-bg"
+      (click)="handleStream()"
+    >
+      <mat-icon svgIcon="live_tv" matTooltip="Strumień wideo"></mat-icon>
+    </button>
     <button
       *appIsNotLogged
       mat-raised-button
       class="primary-bg"
-      routerLink="/shared/login">
-      <mat-icon
-        svgIcon="login"
-        matTooltip="Zaloguj się"></mat-icon>
+      fxLayout="row"
+      fxLAyoutAlign="center center"
+      routerLink="/shared/login"
+      routerLinkActive="secondary-bg"
+    >
+      <mat-icon svgIcon="login" matTooltip="Zaloguj się"></mat-icon>
     </button>
     <button
       *appIsLogged
       mat-raised-button
       class="primary-bg"
-      (click)="handleLogout()">
-      <mat-icon
-        svgIcon="logout"
-        matTooltip="Wyloguj się"></mat-icon>
+      (click)="handleLogout()"
+    >
+      <mat-icon svgIcon="logout" matTooltip="Wyloguj się"></mat-icon>
     </button>
   </div>
 </mat-toolbar>

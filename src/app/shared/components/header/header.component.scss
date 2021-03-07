@@ -1,23 +1,25 @@
 button {
   border-radius: 25px;
+  transition: 0.3s all ease;
+
+  &:hover mat-icon {
+    transform: scale(1.25);
+  }
 }
 
 mat-icon {
   color: white;
 }
 
-mat-icon:hover {
-  transform: scale(1.25);
-}
-
-img:hover {
-  cursor: pointer;
-}
-
-img:focus {
+img {
   outline: none;
+  cursor: pointer;
 }
 
 .primary-bg {
   background-color: #008149;
+}
+
+.secondary-bg {
+  background: #2a3a87;
 }

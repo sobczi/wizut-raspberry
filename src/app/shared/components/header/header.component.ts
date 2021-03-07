@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-
 import { SharedFacade } from '@shared/facades/shared.facade'
 
 @Component({
@@ -12,5 +11,9 @@ export class HeaderComponent {
 
   handleLogout (): void {
     this.sharedFacade.dispatchLogoutRequest()
+  }
+
+  handleStream (): void {
+    window.location.href = 'https://www.wp.pl'
   }
 }
