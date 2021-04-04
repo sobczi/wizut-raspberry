@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  login: '/api/rest-auth/login/'
+  login: '/api/rest-auth/login/',
+  logout: '/api/rest-auth/logout'
 }
 
 /*

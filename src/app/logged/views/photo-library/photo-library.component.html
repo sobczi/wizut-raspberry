@@ -1,0 +1,78 @@
+<form
+  [formGroup]="form"
+  class="photo-library"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxFlex
+  (submit)="submitForm()"
+>
+  <div class="photo-library--content">
+    <div class="photo-library--content--header">
+      <h1 class="primary">
+        <mat-icon svgIcon="photo_library"></mat-icon> Biblioteka zdjęć
+      </h1>
+    </div>
+    <div class="photo-library--content--search">
+      <mat-form-field appearance="outline">
+        <mat-label>Data od</mat-label>
+        <input
+          matInput
+          formControlName="dateFrom"
+          [matDatepicker]="datePickerFrom"
+          [errorStateMatcher]="customErrorMatcher"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datePickerFrom"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datePickerFrom> </mat-datepicker>
+        <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
+          >Wprowadzono nieprawidłowy zakres dat</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Data do</mat-label>
+        <input
+          matInput
+          formControlName="dateTo"
+          [matDatepicker]="datePickerTo"
+          [errorStateMatcher]="customErrorMatcher"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datePickerTo"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datePickerTo></mat-datepicker>
+        <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
+          >Wprowadzono nieprawidłowy zakres dat</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="photo-library--content--submit">
+      <button mat-raised-button type="submit">Wyszukaj</button>
+    </div>
+    <div class="photo-library--content--list">
+      <div
+        *ngFor="let image of currentImages"
+        class="photo-library--content--list--photo"
+      >
+        <div class="photo-library--content--list--photo--image">
+          <img [src]="image.image" alt="" />
+        </div>
+        <div class="photo-library--content--list--photo--name primary">
+          {{ image.name }}
+        </div>
+        <div class="photo-library--content--list--photo--description">
+          <span>
+            <mat-icon svgIcon="calendar"> </mat-icon>
+            {{ image.date | date: 'dd.MM.yyyy' }}
+          </span>
+          <span>
+            <mat-icon svgIcon="temperature"></mat-icon>
+            {{ image.temperature }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

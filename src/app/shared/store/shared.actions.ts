@@ -1,5 +1,4 @@
 import { createAction, props } from '@ngrx/store'
-
 import { LoginResponseArgs } from '@shared/models'
 
 export const LoginRequest = createAction(
@@ -11,5 +10,7 @@ export const LoginResponse = createAction(
   '[Shared Component] Login Response',
   props<LoginResponseArgs>()
 )
+
+export const LogoutResponse = createAction('[Shared Component] Logout Response')
 
 export const LogoutRequest = createAction('[Shared Component] Logout Request')

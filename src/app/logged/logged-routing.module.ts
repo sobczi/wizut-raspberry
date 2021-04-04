@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core'
-import { Routes, RouterModule } from '@angular/router'
-
-import { OverviewComponent } from '@logged/views'
+import { RouterModule, Routes } from '@angular/router'
+import { OverviewComponent, PhotoLibraryComponent } from '@logged/views'
 
 const routes: Routes = [
   {
     path: 'overview',
     component: OverviewComponent
+  },
+  {
+    path: 'photo-library',
+    component: PhotoLibraryComponent
   }
 ]
 

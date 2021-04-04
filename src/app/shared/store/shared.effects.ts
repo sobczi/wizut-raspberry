@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, mergeMap } from 'rxjs/operators'
-import { EMPTY } from 'rxjs'
-
 import { SharedService } from '@shared/services/shared.service'
-
-import { LoginRequest, LoginResponse } from './shared.actions'
+import { EMPTY } from 'rxjs'
+import { catchError, map, mergeMap } from 'rxjs/operators'
+import {
+  LoginRequest,
+  LoginResponse,
+  LogoutRequest,
+  LogoutResponse
+} from './shared.actions'
 
 @Injectable()
 export class SharedEffects {
@@ -24,6 +27,18 @@ export class SharedEffects {
                   access: response.access
                 })
           ),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  )
+
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LogoutRequest),
+      mergeMap(() =>
+        this.service.logout().pipe(
+          map(() => LogoutResponse()),
           catchError(() => EMPTY)
         )
       )

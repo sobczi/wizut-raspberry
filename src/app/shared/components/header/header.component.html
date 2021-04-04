@@ -12,6 +12,18 @@
       *appIsLogged
       mat-raised-button
       class="primary-bg"
+      routerLink="/logged/photo-library"
+      routerLinkActive="secondary-bg"
+    >
+      <mat-icon
+        svgIcon="photo_library"
+        matTooltip="Biblioteka zdjęć"
+      ></mat-icon>
+    </button>
+    <button
+      *appIsLogged
+      mat-raised-button
+      class="primary-bg"
       (click)="handleStream()"
     >
       <mat-icon svgIcon="live_tv" matTooltip="Strumień wideo"></mat-icon>
