@@ -6,19 +6,33 @@ import {
   FormGroupDirective,
   NgForm
 } from '@angular/forms'
-import { DateAdapter, ErrorStateMatcher, MAT_DATE_FORMATS } from '@angular/material/core'
-import { AppDateAdapter, APP_DATE_FORMATS } from '@logged/adapters/custom-date-adapter'
+import {
+  DateAdapter,
+  ErrorStateMatcher,
+  MAT_DATE_FORMATS
+} from '@angular/material/core'
+import {
+  AppDateAdapter,
+  APP_DATE_FORMATS
+} from '@logged/adapters/custom-date-adapter'
 import {
   dateFromBiggerThanDateToErrorString as dateErrorString,
   dateFromBiggerThanDateToValidator
 } from '@logged/validators/dateFromBiggerThanDateToValidator'
+import {
+  temperatureFromBiggerThanTemperatureToErrorString as temperatureErrorString,
+  temperatureFromBiggerThanTemperatureToValidator
+} from '@logged/validators/temperatureFromBiggerThanTemperatureToValidator'
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState (
     control: FormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
-    return control.hasError(dateErrorString) || form.hasError(dateErrorString)
+    const x = [temperatureErrorString, dateErrorString].map(
+      e => control.hasError(e) || form.hasError(e)
+    )
+    return x.find(e => !!e)
   }
 }
 
@@ -27,23 +41,39 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './photo-library.component.html',
   styleUrls: ['./photo-library.component.scss'],
   providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+    { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
 export class PhotoLibraryComponent {
   currentImages = []
+  currentPage = 1
   readonly customErrorMatcher = new MyErrorStateMatcher()
   readonly form: FormGroup
   private allImages = []
+
+  get currentScope (): any[] {
+    const x = this.currentPage * 8
+    return this.allImages.slice(x, x + 8)
+  }
 
   constructor (fb: FormBuilder) {
     this.form = fb.group(
       {
         dateFrom: [undefined],
-        dateTo: [undefined]
+        dateTo: [undefined],
+        temperatureFrom: [undefined],
+        temperatureTo: [undefined]
       },
-      { validators: dateFromBiggerThanDateToValidator('dateFrom', 'dateTo') }
+      {
+        validators: [
+          dateFromBiggerThanDateToValidator('dateFrom', 'dateTo'),
+          temperatureFromBiggerThanTemperatureToValidator(
+            'temperatureFrom',
+            'temperatureTo'
+          )
+        ]
+      }
     )
 
     Array(100)
@@ -51,7 +81,6 @@ export class PhotoLibraryComponent {
       .forEach((element, idx) =>
         this.allImages.push({
           image: 'assets/images/example.jpeg',
-          name: `example_image_name_ ${idx}.jpeg`,
           temperature: `${Math.floor(Math.random() * (42 - 36 + 1)) + 36}°C`,
           date: this.createCustomDayString(idx)
         })
@@ -67,7 +96,10 @@ export class PhotoLibraryComponent {
       return
     }
 
-    if (this.form.hasError(dateErrorString)) {
+    if (
+      this.form.hasError(dateErrorString) ||
+      this.form.hasError(temperatureErrorString)
+    ) {
       return
     }
 

@@ -13,54 +13,93 @@
       </h1>
     </div>
     <div class="photo-library--content--search">
-      <mat-form-field appearance="outline">
-        <mat-label>Data od</mat-label>
-        <input
-          matInput
-          formControlName="dateFrom"
-          [matDatepicker]="datePickerFrom"
-          [errorStateMatcher]="customErrorMatcher"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="datePickerFrom"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #datePickerFrom> </mat-datepicker>
-        <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
-          >Wprowadzono nieprawidłowy zakres dat</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Data do</mat-label>
-        <input
-          matInput
-          formControlName="dateTo"
-          [matDatepicker]="datePickerTo"
-          [errorStateMatcher]="customErrorMatcher"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="datePickerTo"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #datePickerTo></mat-datepicker>
-        <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
-          >Wprowadzono nieprawidłowy zakres dat</mat-error
-        >
-      </mat-form-field>
+      <div class="photo-library--content--search--row">
+        <mat-form-field appearance="outline">
+          <mat-label>Data od</mat-label>
+          <input
+            matInput
+            formControlName="dateFrom"
+            [matDatepicker]="datePickerFrom"
+            [errorStateMatcher]="customErrorMatcher"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datePickerFrom"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datePickerFrom> </mat-datepicker>
+          <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
+            >Wprowadzono nieprawidłowy zakres dat</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Temperatura od</mat-label>
+          <input
+            matInput
+            formControlName="temperatureFrom"
+            [errorStateMatcher]="customErrorMatcher"
+          />
+          <mat-icon matSuffix svgIcon="temperature"></mat-icon>
+          <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
+            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="photo-library--content--search--row">
+        <mat-form-field appearance="outline">
+          <mat-label>Data do</mat-label>
+          <input
+            matInput
+            formControlName="dateTo"
+            [matDatepicker]="datePickerTo"
+            [errorStateMatcher]="customErrorMatcher"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datePickerTo"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datePickerTo></mat-datepicker>
+          <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
+            >Wprowadzono nieprawidłowy zakres dat</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Temperatura do</mat-label>
+          <input
+            matInput
+            formControlName="temperatureTo"
+            [errorStateMatcher]="customErrorMatcher"
+          />
+          <mat-icon matSuffix svgIcon="temperature"></mat-icon>
+          <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
+            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
+          >
+        </mat-form-field>
+      </div>
     </div>
     <div class="photo-library--content--submit">
       <button mat-raised-button type="submit">Wyszukaj</button>
     </div>
+    <div class="photo-library--content--pagination-refresh">
+      <span>Ilość wyników na jednej stronie</span>
+      <mat-button-toggle-group name="pagination">
+        <mat-button-toggle value="bold">8</mat-button-toggle>
+        <mat-button-toggle>12</mat-button-toggle>
+        <mat-button-toggle>16</mat-button-toggle>
+        <mat-button-toggle>20</mat-button-toggle>
+      </mat-button-toggle-group>
+      <button mat-raised-button>
+        <mat-icon svgIcon="refresh"></mat-icon>
+        Odśwież
+      </button>
+    </div>
     <div class="photo-library--content--list">
       <div
-        *ngFor="let image of currentImages"
+        *ngFor="let image of currentScope"
         class="photo-library--content--list--photo"
       >
         <div class="photo-library--content--list--photo--image">
-          <img [src]="image.image" alt="" />
-        </div>
-        <div class="photo-library--content--list--photo--name primary">
-          {{ image.name }}
+          Zdjęcie
+          <!-- <img [src]="image.image" alt="" /> -->
         </div>
         <div class="photo-library--content--list--photo--description">
           <span>
@@ -73,6 +112,19 @@
           >
         </div>
       </div>
+    </div>
+    <div class="photo-library--content--pagination">
+      <button mat-mini-fab>
+        <mat-icon svgIcon="chevron"></mat-icon>
+      </button>
+      <span>1</span>
+      <span>2</span>
+      <span>3</span>
+      <span>...</span>
+      <span>10</span>
+      <button mat-mini-fab>
+        <mat-icon svgIcon="chevron"></mat-icon>
+      </button>
     </div>
   </div>
 </form>

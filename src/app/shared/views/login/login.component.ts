@@ -1,12 +1,11 @@
 import { Component, OnDestroy } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { takeUntil } from 'rxjs/operators'
-import { Subject } from 'rxjs'
-
+import { Router } from '@angular/router'
 import { SharedFacade } from '@shared/facades/shared.facade'
 import { FormControls } from '@shared/models'
-import { DialogService } from '@shared/services'
-import { Router } from '@angular/router'
+import { DialogService, SharedService } from '@shared/services'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
 
 @Component({
   selector: 'app-login',
@@ -25,6 +24,7 @@ export class LoginComponent implements OnDestroy {
     private readonly router: Router,
     private readonly facade: SharedFacade,
     private readonly dialogService: DialogService,
+    private readonly sharedService: SharedService,
     formsBuilder: FormBuilder
   ) {
     this.form = formsBuilder.group({

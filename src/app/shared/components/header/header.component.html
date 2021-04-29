@@ -20,11 +20,13 @@
         matTooltip="Biblioteka zdjęć"
       ></mat-icon>
     </button>
+    <!-- (click)="handleStream()" -->
     <button
       *appIsLogged
       mat-raised-button
       class="primary-bg"
-      (click)="handleStream()"
+      routerLink="/logged/video-stream"
+      routerLinkActive="secondary-bg"
     >
       <mat-icon svgIcon="live_tv" matTooltip="Strumień wideo"></mat-icon>
     </button>
