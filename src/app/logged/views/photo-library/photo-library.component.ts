@@ -1,4 +1,5 @@
-import { Component } from '@angular/core'
+import { DOCUMENT } from '@angular/common'
+import { Component, Inject, OnDestroy } from '@angular/core'
 import {
   FormBuilder,
   FormControl,
@@ -15,6 +16,7 @@ import {
   AppDateAdapter,
   APP_DATE_FORMATS
 } from '@logged/adapters/custom-date-adapter'
+import { LoggedService } from '@logged/services/logged.service'
 import {
   dateFromBiggerThanDateToErrorString as dateErrorString,
   dateFromBiggerThanDateToValidator
@@ -23,16 +25,18 @@ import {
   temperatureFromBiggerThanTemperatureToErrorString as temperatureErrorString,
   temperatureFromBiggerThanTemperatureToValidator
 } from '@logged/validators/temperatureFromBiggerThanTemperatureToValidator'
+import { Subject } from 'rxjs'
+import { filter, map, takeUntil, tap } from 'rxjs/operators'
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState (
     control: FormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
-    const x = [temperatureErrorString, dateErrorString].map(
+    const hasError = [temperatureErrorString, dateErrorString].map(
       e => control.hasError(e) || form.hasError(e)
     )
-    return x.find(e => !!e)
+    return hasError.find(e => !!e)
   }
 }
 
@@ -45,25 +49,63 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
-export class PhotoLibraryComponent {
-  currentImages = []
+export class PhotoLibraryComponent implements OnDestroy {
   currentPage = 1
+  listStyle: Record<string, string> = { 'min-height': '712px' }
+
   readonly customErrorMatcher = new MyErrorStateMatcher()
   readonly form: FormGroup
+
+  private currentImages = []
   private allImages = []
 
-  get currentScope (): any[] {
-    const x = this.currentPage * 8
-    return this.allImages.slice(x, x + 8)
+  private readonly untilDestroy$ = new Subject<void>()
+
+  get images (): any[] {
+    const { pagination } = this.form.value
+    const end = this.currentPage * pagination
+    return this.currentImages.slice(end - pagination, end)
   }
 
-  constructor (fb: FormBuilder) {
+  get pages (): number[] {
+    const { pagination } = this.form.value
+    const imagesLength = this.currentImages.length
+    const maxPage = Math.ceil(imagesLength / pagination)
+
+    let pages = []
+
+    Array(5)
+      .fill(0)
+      .forEach((_, idx) => pages.push(this.currentPage - 2 + idx))
+
+    pages = pages
+      .filter(e => e > 0)
+      .filter(e => e >= this.currentPage - 2 && e <= this.currentPage + 2)
+      .filter(e => e > 0 && e <= maxPage)
+
+    if (pages[pages.length - 1] < maxPage) {
+      pages = [...pages, -1, maxPage]
+    }
+
+    if (pages[0] > 1) {
+      pages = [1, -1, ...pages]
+    }
+
+    return pages
+  }
+
+  constructor (
+    fb: FormBuilder,
+    private readonly loggedService: LoggedService,
+    @Inject(DOCUMENT) private readonly document: Document
+  ) {
     this.form = fb.group(
       {
         dateFrom: [undefined],
         dateTo: [undefined],
         temperatureFrom: [undefined],
-        temperatureTo: [undefined]
+        temperatureTo: [undefined],
+        pagination: [8]
       },
       {
         validators: [
@@ -76,23 +118,90 @@ export class PhotoLibraryComponent {
       }
     )
 
-    Array(100)
+    this.form.controls.pagination.valueChanges
+      .pipe(
+        takeUntil(this.untilDestroy$),
+        tap(pagination => {
+          let height = '712px'
+          if (pagination === 12) {
+            height = '1040px'
+          }
+
+          if (pagination === 16) {
+            height = '1368px'
+          }
+
+          if (pagination === 20) {
+            height = '1696px'
+          }
+
+          this.listStyle = { 'min-height': height }
+        }),
+        filter(
+          pagination =>
+            this.currentPage > Math.ceil(this.currentImages.length / pagination)
+        ),
+        map(pagination => Math.ceil(this.currentImages.length / pagination))
+      )
+      .subscribe(currentPage => (this.currentPage = currentPage))
+
+    // MOCKS
+    // this.loggedService.fetchImages().subscribe()
+    Array(200)
       .fill(1)
       .forEach((element, idx) =>
         this.allImages.push({
           image: 'assets/images/example.jpeg',
-          temperature: `${Math.floor(Math.random() * (42 - 36 + 1)) + 36}°C`,
+          temperature: idx,
           date: this.createCustomDayString(idx)
         })
       )
-
     this.currentImages = this.allImages
   }
 
-  submitForm (): void {
-    const { dateFrom, dateTo } = this.form.value
+  ngOnDestroy (): void {
+    this.untilDestroy$.next()
+    this.untilDestroy$.complete()
+  }
 
-    if (!dateFrom && !dateTo) {
+  handleChangePage (page: number): void {
+    if (page === -1) {
+      return
+    }
+
+    this.currentPage = page
+  }
+
+  handleSwitchPage (previous: boolean): void {
+    const { pagination } = this.form.value
+    const minusOverflow = previous && this.currentPage === 1
+    const plusOverflow =
+      !previous &&
+      this.currentPage === Math.ceil(this.currentImages.length / pagination)
+
+    if (minusOverflow || plusOverflow) {
+      return
+    }
+
+    this.currentPage += previous ? -1 : 1
+    this.document
+      .querySelector('.mat-toolbar')
+      .scrollIntoView({ behavior: 'smooth' })
+  }
+
+  handleRefreshImages (): void {}
+
+  handleSubmitForm (): void {
+    const { dateFrom, dateTo, temperatureFrom, temperatureTo } = this.form.value
+    const temperatureFromIsNumber = temperatureFrom !== null
+    const temperatureToIsNumber = temperatureTo !== null
+
+    if (
+      !dateFrom &&
+      !dateTo &&
+      !temperatureFromIsNumber &&
+      !temperatureToIsNumber
+    ) {
       return
     }
 
@@ -106,6 +215,8 @@ export class PhotoLibraryComponent {
     this.currentImages = this.allImages.filter(i => {
       let dateFromOK = true
       let dateToOK = true
+      let temperatureOK = true
+      let temperaturesHandled = false
 
       if (dateFrom) {
         dateFromOK = dateFrom.getTime() <= i.date
@@ -115,8 +226,26 @@ export class PhotoLibraryComponent {
         dateToOK = dateTo.getTime() >= i.date
       }
 
-      return dateFromOK && dateToOK
+      if (temperatureFromIsNumber && temperatureToIsNumber) {
+        temperatureOK =
+          i.temperature >= temperatureFrom && i.temperature <= temperatureTo
+        temperaturesHandled = true
+      }
+
+      if (!temperaturesHandled && temperatureFromIsNumber) {
+        temperatureOK = i.temperature >= temperatureFrom
+        temperaturesHandled = true
+      }
+
+      if (!temperaturesHandled && temperatureToIsNumber) {
+        temperatureOK = i.temperature <= temperatureTo
+        temperaturesHandled = true
+      }
+
+      return dateFromOK && dateToOK && temperatureOK
     })
+
+    this.currentPage = 1
   }
 
   private createCustomDayString (days: number): Date {

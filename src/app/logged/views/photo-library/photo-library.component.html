@@ -4,7 +4,6 @@
   fxLayout="column"
   fxLayoutAlign="center center"
   fxFlex
-  (submit)="submitForm()"
 >
   <div class="photo-library--content">
     <div class="photo-library--content--header">
@@ -76,25 +75,25 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="photo-library--content--submit">
+    <div class="photo-library--content--submit" (click)="handleSubmitForm()">
       <button mat-raised-button type="submit">Wyszukaj</button>
     </div>
     <div class="photo-library--content--pagination-refresh">
       <span>Ilość wyników na jednej stronie</span>
-      <mat-button-toggle-group name="pagination">
-        <mat-button-toggle value="bold">8</mat-button-toggle>
-        <mat-button-toggle>12</mat-button-toggle>
-        <mat-button-toggle>16</mat-button-toggle>
-        <mat-button-toggle>20</mat-button-toggle>
+      <mat-button-toggle-group name="pagination" formControlName="pagination">
+        <mat-button-toggle [value]="8">8</mat-button-toggle>
+        <mat-button-toggle [value]="12">12</mat-button-toggle>
+        <mat-button-toggle [value]="16">16</mat-button-toggle>
+        <mat-button-toggle [value]="20">20</mat-button-toggle>
       </mat-button-toggle-group>
-      <button mat-raised-button>
+      <button mat-raised-button (click)="handleRefreshImages()">
         <mat-icon svgIcon="refresh"></mat-icon>
         Odśwież
       </button>
     </div>
-    <div class="photo-library--content--list">
+    <div class="photo-library--content--list" [ngStyle]="listStyle">
       <div
-        *ngFor="let image of currentScope"
+        *ngFor="let image of images"
         class="photo-library--content--list--photo"
       >
         <div class="photo-library--content--list--photo--image">
@@ -108,21 +107,30 @@
           </span>
           <span>
             <mat-icon svgIcon="temperature"></mat-icon>
-            {{ image.temperature }}</span
-          >
+            {{ image.temperature }} °C
+          </span>
         </div>
       </div>
     </div>
     <div class="photo-library--content--pagination">
-      <button mat-mini-fab>
+      <button mat-mini-fab (click)="handleSwitchPage(true)">
         <mat-icon svgIcon="chevron"></mat-icon>
       </button>
-      <span>1</span>
-      <span>2</span>
-      <span>3</span>
-      <span>...</span>
-      <span>10</span>
-      <button mat-mini-fab>
+      <span
+        *ngFor="let page of pages"
+        class="photo-library--content--pagination--page"
+        [class.photo-library--content--pagination--placeholder]="page === -1"
+        [class.photo-library--content--pagination--page--active]="page === currentPage"
+        (click)="handleChangePage(page)"
+      >
+        <ng-container *ngIf="page !== -1">
+          {{ page }}
+        </ng-container>
+        <ng-container *ngIf="page === -1">
+          ...
+        </ng-container>
+      </span>
+      <button mat-mini-fab (click)="handleSwitchPage(false)">
         <mat-icon svgIcon="chevron"></mat-icon>
       </button>
     </div>

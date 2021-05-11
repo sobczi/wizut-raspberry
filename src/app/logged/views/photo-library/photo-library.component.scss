@@ -92,24 +92,28 @@
     }
 
     &--pagination {
+      display: flex;
+
+      &--page, &--placeholder {
+        width: 21px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        margin: 0px 10px;
+      }
+
+      &--page--active {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 18px;
+      }
+
       button {
         margin: 0px 10px;
-      }
-
-      :nth-child(1) {
-        mat-icon {
+        &:nth-child(1) mat-icon {
           transform: rotate(180deg);
         }
-      }
-
-      span {
-        &:nth-child(2) {
-          font-weight: 700;
-          color: var(--primary-color);
-          font-size: 18px;
-        }
-
-        margin: 0px 10px;
       }
     }
 
@@ -142,8 +146,7 @@
     &--list {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
+      width: calc(100% + 2em);
 
       padding: 2em 0em;
       margin: -1em;
