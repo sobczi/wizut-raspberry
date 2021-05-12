@@ -16,8 +16,8 @@ import {
   AppDateAdapter,
   APP_DATE_FORMATS
 } from '@logged/adapters/custom-date-adapter'
+import { LoggedFacade } from '@logged/facades/logged.facade'
 import { PhotoTemperature } from '@logged/models/photo-temperature'
-import { LoggedService } from '@logged/services/logged.service'
 import {
   dateFromBiggerThanDateToErrorString as dateErrorString,
   dateFromBiggerThanDateToValidator
@@ -51,8 +51,13 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   ]
 })
 export class PhotoLibraryComponent implements OnDestroy {
+  // TODO filters debug && fix
+  // TODO login debug && fix
+  // TODO stream view, catch redirect with params and logout
+
   currentPage = 1
   listStyle: Record<string, string> = { 'min-height': '712px' }
+  loadingState = true
 
   readonly customErrorMatcher = new MyErrorStateMatcher()
   readonly form: FormGroup
@@ -97,8 +102,8 @@ export class PhotoLibraryComponent implements OnDestroy {
 
   constructor (
     fb: FormBuilder,
-    private readonly loggedService: LoggedService,
-    @Inject(DOCUMENT) private readonly document: Document
+    @Inject(DOCUMENT) private readonly document: Document,
+    private readonly loggedFacade: LoggedFacade
   ) {
     this.form = fb.group(
       {
@@ -146,9 +151,19 @@ export class PhotoLibraryComponent implements OnDestroy {
       )
       .subscribe(currentPage => (this.currentPage = currentPage))
 
-    this.loggedService
-      .fetchImages()
+    this.loggedFacade.loadingState$
       .pipe(takeUntil(this.untilDestroy$))
+      .subscribe({
+        next: loadingState => (this.loadingState = loadingState)
+      })
+
+    this.loggedFacade
+      .dispatchUpdateLoadingState(true)
+      .dispatchFetchImagesRequest()
+      .photosTemperatures$.pipe(
+        filter(v => !!v),
+        tap(() => this.loggedFacade.dispatchUpdateLoadingState(false))
+      )
       .subscribe({
         next: photoTemperatures => {
           this.allImages = photoTemperatures
@@ -187,7 +202,9 @@ export class PhotoLibraryComponent implements OnDestroy {
       .scrollIntoView({ behavior: 'smooth' })
   }
 
-  handleRefreshImages (): void {}
+  handleRefreshImages (): void {
+    this.loggedFacade.dispatchFetchImagesRequest(true)
+  }
 
   handleSubmitForm (): void {
     const { dateFrom, dateTo, temperatureFrom, temperatureTo } = this.form.value

@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { DomSanitizer } from '@angular/platform-browser'
@@ -52,6 +53,7 @@ import { HomeComponent, LoginComponent } from '@shared/views'
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
     EffectsModule.forFeature([SharedEffects]),
     StoreModule.forFeature(SharedStoreKey, SharedReducer)
   ],
@@ -69,6 +71,7 @@ import { HomeComponent, LoginComponent } from '@shared/views'
     MatToolbarModule,
     MatIconModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     HomeComponent,
     AuthModule,
     MatDialogModule,
