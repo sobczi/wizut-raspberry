@@ -155,17 +155,6 @@ export class PhotoLibraryComponent implements OnDestroy {
           this.currentImages = this.allImages
         }
       })
-
-    // MOCKS
-    // Array(200)
-    //   .fill(1)
-    //   .forEach((element, idx) =>
-    //     this.allImages.push({
-    //       image: 'assets/images/example.jpeg',
-    //       temperature: idx,
-    //       date: this.createCustomDayString(idx)
-    //     })
-    //   )
   }
 
   ngOnDestroy (): void {
