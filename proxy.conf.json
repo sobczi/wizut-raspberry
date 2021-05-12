@@ -3,5 +3,10 @@
     "target": "http://82.145.73.141:8000",
     "secure": false,
     "pathRewrite": { "^/api": "" }
+  },
+  "/account": {
+    "target": "http://82.145.73.141:8000",
+    "secure": "false",
+    "pathRewrite": { "^/api": "" }
   }
 }

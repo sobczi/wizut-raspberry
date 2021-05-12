@@ -16,6 +16,7 @@ import {
   AppDateAdapter,
   APP_DATE_FORMATS
 } from '@logged/adapters/custom-date-adapter'
+import { PhotoTemperature } from '@logged/models/photo-temperature'
 import { LoggedService } from '@logged/services/logged.service'
 import {
   dateFromBiggerThanDateToErrorString as dateErrorString,
@@ -56,12 +57,12 @@ export class PhotoLibraryComponent implements OnDestroy {
   readonly customErrorMatcher = new MyErrorStateMatcher()
   readonly form: FormGroup
 
-  private currentImages = []
-  private allImages = []
+  private currentImages: PhotoTemperature[] = []
+  private allImages: PhotoTemperature[] = []
 
   private readonly untilDestroy$ = new Subject<void>()
 
-  get images (): any[] {
+  get images (): PhotoTemperature[] {
     const { pagination } = this.form.value
     const end = this.currentPage * pagination
     return this.currentImages.slice(end - pagination, end)
@@ -72,7 +73,7 @@ export class PhotoLibraryComponent implements OnDestroy {
     const imagesLength = this.currentImages.length
     const maxPage = Math.ceil(imagesLength / pagination)
 
-    let pages = []
+    let pages: number[] = []
 
     Array(5)
       .fill(0)
@@ -145,18 +146,26 @@ export class PhotoLibraryComponent implements OnDestroy {
       )
       .subscribe(currentPage => (this.currentPage = currentPage))
 
+    this.loggedService
+      .fetchImages()
+      .pipe(takeUntil(this.untilDestroy$))
+      .subscribe({
+        next: photoTemperatures => {
+          this.allImages = photoTemperatures
+          this.currentImages = this.allImages
+        }
+      })
+
     // MOCKS
-    // this.loggedService.fetchImages().subscribe()
-    Array(200)
-      .fill(1)
-      .forEach((element, idx) =>
-        this.allImages.push({
-          image: 'assets/images/example.jpeg',
-          temperature: idx,
-          date: this.createCustomDayString(idx)
-        })
-      )
-    this.currentImages = this.allImages
+    // Array(200)
+    //   .fill(1)
+    //   .forEach((element, idx) =>
+    //     this.allImages.push({
+    //       image: 'assets/images/example.jpeg',
+    //       temperature: idx,
+    //       date: this.createCustomDayString(idx)
+    //     })
+    //   )
   }
 
   ngOnDestroy (): void {
@@ -219,26 +228,27 @@ export class PhotoLibraryComponent implements OnDestroy {
       let temperaturesHandled = false
 
       if (dateFrom) {
-        dateFromOK = dateFrom.getTime() <= i.date
+        dateFromOK = dateFrom.getTime() <= i.imageDate.getTime()
       }
 
       if (dateTo) {
-        dateToOK = dateTo.getTime() >= i.date
+        dateToOK = dateTo.getTime() >= i.imageDate.getTime()
       }
 
       if (temperatureFromIsNumber && temperatureToIsNumber) {
         temperatureOK =
-          i.temperature >= temperatureFrom && i.temperature <= temperatureTo
+          i.firstTemperature >= temperatureFrom &&
+          i.firstTemperature <= temperatureTo
         temperaturesHandled = true
       }
 
       if (!temperaturesHandled && temperatureFromIsNumber) {
-        temperatureOK = i.temperature >= temperatureFrom
+        temperatureOK = i.firstTemperature >= temperatureFrom
         temperaturesHandled = true
       }
 
       if (!temperaturesHandled && temperatureToIsNumber) {
-        temperatureOK = i.temperature <= temperatureTo
+        temperatureOK = i.firstTemperature <= temperatureTo
         temperaturesHandled = true
       }
 
@@ -246,11 +256,5 @@ export class PhotoLibraryComponent implements OnDestroy {
     })
 
     this.currentPage = 1
-  }
-
-  private createCustomDayString (days: number): Date {
-    const today = new Date()
-    today.setDate(today.getDate() + days)
-    return today
   }
 }
