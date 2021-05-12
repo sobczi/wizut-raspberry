@@ -12,7 +12,10 @@ export class SharedService {
     username: string,
     password: string
   ): Observable<{ refresh: string; access: string } | boolean> {
-    // return of({ refresh: 'abc', access: 'def' })
+    if (!environment.production) {
+      return of({ refresh: 'abc', access: 'def' })
+    }
+
     return this.http
       .post<{ refresh: string; access: string }>(environment.login, {
         username,
