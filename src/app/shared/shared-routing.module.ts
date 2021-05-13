@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-
-import { HomeComponent, LoginComponent } from '@shared/views'
 import { NotLoggedGuard } from '@auth/guards'
+import { HomeComponent, LoginComponent } from '@shared/views'
+import { LogoutResolver } from './resolvers/logout.resolver'
 
 const routes: Routes = [
   {
@@ -12,7 +12,10 @@ const routes: Routes = [
   },
   {
     path: 'homepage',
-    component: HomeComponent
+    component: HomeComponent,
+    resolve: {
+      redirect: LogoutResolver
+    }
   },
   {
     path: '**',

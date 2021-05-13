@@ -26,6 +26,7 @@ import { DialogService, SharedService } from '@shared/services'
 import { SharedRoutingModule } from '@shared/shared-routing.module'
 import { SharedEffects, SharedReducer, SharedStoreKey } from '@shared/store'
 import { HomeComponent, LoginComponent } from '@shared/views'
+import { LogoutResolver } from './resolvers/logout.resolver'
 
 @NgModule({
   declarations: [
@@ -78,7 +79,7 @@ import { HomeComponent, LoginComponent } from '@shared/views'
     MatNativeDateModule,
     MatDatepickerModule
   ],
-  providers: [SharedService, SharedFacade, DialogService]
+  providers: [SharedService, SharedFacade, DialogService, LogoutResolver]
 })
 export class SharedModule {
   constructor (registry: MatIconRegistry, domSanitizer: DomSanitizer) {
