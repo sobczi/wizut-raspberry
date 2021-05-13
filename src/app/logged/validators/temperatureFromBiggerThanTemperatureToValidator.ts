@@ -8,8 +8,8 @@ export const temperatureFromBiggerThanTemperatureToValidator = (
   temperatureTo: string
 ) => {
   return (control: FormGroup): ValidationErrors | null => {
-    const from: Date = control.get(temperatureFrom).value
-    const to: Date = control.get(temperatureTo).value
+    const from = Number(control.get(temperatureFrom).value)
+    const to = Number(control.get(temperatureTo).value)
 
     if (!from || !to) {
       return null

@@ -42,8 +42,7 @@
 
     &--search {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
 
       width: 100%;
       flex: 1;
@@ -55,8 +54,13 @@
       padding-top: calc(1em + 30px);
       padding-bottom: calc(1em + 15px);
 
-      &--row + &--row {
-        margin-left: 1em;
+      &--row {
+        display: flex;
+        flex: 1;
+
+        mat-form-field + mat-form-field {
+          margin-left: 1em;
+        }
       }
 
       mat-form-field {
@@ -99,8 +103,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
         margin: 0px 10px;
+      }
+
+      &--page {
+        cursor: pointer;
       }
 
       &--page--active {

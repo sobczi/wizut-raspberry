@@ -4,8 +4,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm
+  FormGroupDirective
 } from '@angular/forms'
 import {
   DateAdapter,
@@ -29,15 +28,22 @@ import {
 import { Subject } from 'rxjs'
 import { filter, map, takeUntil, tap } from 'rxjs/operators'
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+  constructor (
+    private readonly touchedControlsKeys: string[],
+    private readonly error: string
+  ) {}
+
   isErrorState (
     control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
+    form: FormGroupDirective | null
   ): boolean {
-    const hasError = [temperatureErrorString, dateErrorString].map(
-      e => control.hasError(e) || form.hasError(e)
-    )
-    return hasError.find(e => !!e)
+    const untouchedControlsNotFound =
+      this.touchedControlsKeys
+        .map(touchedControl => form.form.controls[touchedControl]?.touched)
+        .findIndex(touched => !touched) === -1
+
+    return form.hasError(this.error) && untouchedControlsNotFound
   }
 }
 
@@ -51,7 +57,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   ]
 })
 export class PhotoLibraryComponent implements OnDestroy {
-  // TODO filters debug && fix
   // TODO login debug && fix
   // TODO stream view, catch redirect with params and logout
 
@@ -59,7 +64,14 @@ export class PhotoLibraryComponent implements OnDestroy {
   listStyle: Record<string, string> = { 'min-height': '712px' }
   loadingState = true
 
-  readonly customErrorMatcher = new MyErrorStateMatcher()
+  readonly dateErrorMatcher = new CustomErrorStateMatcher(
+    ['dateFrom', 'dateTo'],
+    dateErrorString
+  )
+  readonly temperatureErrorMatcher = new CustomErrorStateMatcher(
+    ['temperatureFrom', 'temperatureTo'],
+    temperatureErrorString
+  )
   readonly form: FormGroup
 
   private currentImages: PhotoTemperature[] = []
@@ -80,13 +92,13 @@ export class PhotoLibraryComponent implements OnDestroy {
 
     let pages: number[] = []
 
-    Array(5)
+    Array(3)
       .fill(0)
-      .forEach((_, idx) => pages.push(this.currentPage - 2 + idx))
+      .forEach((_, idx) => pages.push(this.currentPage - 1 + idx))
 
     pages = pages
       .filter(e => e > 0)
-      .filter(e => e >= this.currentPage - 2 && e <= this.currentPage + 2)
+      .filter(e => e >= this.currentPage - 1 && e <= this.currentPage + 1)
       .filter(e => e > 0 && e <= maxPage)
 
     if (pages[pages.length - 1] < maxPage) {
@@ -208,8 +220,8 @@ export class PhotoLibraryComponent implements OnDestroy {
 
   handleSubmitForm (): void {
     const { dateFrom, dateTo, temperatureFrom, temperatureTo } = this.form.value
-    const temperatureFromIsNumber = temperatureFrom !== null
-    const temperatureToIsNumber = temperatureTo !== null
+    const temperatureFromIsNumber = typeof temperatureFrom === 'number'
+    const temperatureToIsNumber = typeof temperatureTo === 'number'
 
     if (
       !dateFrom &&
@@ -217,6 +229,7 @@ export class PhotoLibraryComponent implements OnDestroy {
       !temperatureFromIsNumber &&
       !temperatureToIsNumber
     ) {
+      this.currentImages = this.allImages
       return
     }
 
@@ -224,6 +237,7 @@ export class PhotoLibraryComponent implements OnDestroy {
       this.form.hasError(dateErrorString) ||
       this.form.hasError(temperatureErrorString)
     ) {
+      this.form.markAllAsTouched()
       return
     }
 

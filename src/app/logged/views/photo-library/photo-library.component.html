@@ -19,7 +19,7 @@
             matInput
             formControlName="dateFrom"
             [matDatepicker]="datePickerFrom"
-            [errorStateMatcher]="customErrorMatcher"
+            [errorStateMatcher]="dateErrorMatcher"
           />
           <mat-datepicker-toggle
             matSuffix
@@ -31,26 +31,12 @@
           >
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Temperatura od</mat-label>
-          <input
-            matInput
-            formControlName="temperatureFrom"
-            [errorStateMatcher]="customErrorMatcher"
-          />
-          <mat-icon matSuffix svgIcon="temperature"></mat-icon>
-          <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
-            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
-          >
-        </mat-form-field>
-      </div>
-      <div class="photo-library--content--search--row">
-        <mat-form-field appearance="outline">
           <mat-label>Data do</mat-label>
           <input
             matInput
             formControlName="dateTo"
             [matDatepicker]="datePickerTo"
-            [errorStateMatcher]="customErrorMatcher"
+            [errorStateMatcher]="dateErrorMatcher"
           />
           <mat-datepicker-toggle
             matSuffix
@@ -61,12 +47,28 @@
             >Wprowadzono nieprawidłowy zakres dat</mat-error
           >
         </mat-form-field>
+      </div>
+      <div class="photo-library--content--search--row">
+        <mat-form-field appearance="outline">
+          <mat-label>Temperatura od</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="temperatureFrom"
+            [errorStateMatcher]="temperatureErrorMatcher"
+          />
+          <mat-icon matSuffix svgIcon="temperature"></mat-icon>
+          <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
+            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
+          >
+        </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Temperatura do</mat-label>
           <input
+            type="number"
             matInput
             formControlName="temperatureTo"
-            [errorStateMatcher]="customErrorMatcher"
+            [errorStateMatcher]="temperatureErrorMatcher"
           />
           <mat-icon matSuffix svgIcon="temperature"></mat-icon>
           <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
@@ -122,7 +124,10 @@
         </div>
       </div>
     </div>
-    <div *ngIf="!loadingState" class="photo-library--content--pagination">
+    <div
+      *ngIf="!loadingState && pages.length"
+      class="photo-library--content--pagination"
+    >
       <button mat-mini-fab (click)="handleSwitchPage(true)">
         <mat-icon svgIcon="chevron"></mat-icon>
       </button>
