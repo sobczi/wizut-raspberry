@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
+import { TranslateService } from '@ngx-translate/core'
 import { SharedFacade } from '@shared/facades/shared.facade'
 import { FormControls } from '@shared/models'
-import { DialogService, SharedService } from '@shared/services'
+import { DialogService } from '@shared/services'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 
@@ -24,7 +25,7 @@ export class LoginComponent implements OnDestroy {
     private readonly router: Router,
     private readonly facade: SharedFacade,
     private readonly dialogService: DialogService,
-    private readonly sharedService: SharedService,
+    private readonly translateService: TranslateService,
     formsBuilder: FormBuilder
   ) {
     this.form = formsBuilder.group({
@@ -37,16 +38,18 @@ export class LoginComponent implements OnDestroy {
       .subscribe(response => {
         if (response.response) {
           this.dialogService.openSimpleDialog({
-            header: 'Zalogowano',
-            content: `Witaj, ${response.username}.`
+            header: 'signedIn',
+            content: `${this.translateService.instant('welcome')}, ${
+              response.username
+            }.`
           })
           this.router.navigate(['/logged/overview'])
           return
         }
 
         this.dialogService.openSimpleDialog({
-          header: 'Niezalogowano',
-          content: 'Wprowadzono niepoprawny login lub hasło.'
+          header: 'notLoggedIn',
+          content: 'invalidLoginOrPassword'
         })
         this.form.patchValue({ username: '', password: '' })
       })

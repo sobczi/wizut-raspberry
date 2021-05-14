@@ -8,13 +8,14 @@
   <div class="photo-library--content">
     <div class="photo-library--content--header">
       <h1 class="primary">
-        <mat-icon svgIcon="photo_library"></mat-icon> Biblioteka zdjęć
+        <mat-icon svgIcon="photo_library"></mat-icon> {{ 'photoLibrary' |
+        translate }}
       </h1>
     </div>
     <div class="photo-library--content--search">
       <div class="photo-library--content--search--row">
         <mat-form-field appearance="outline">
-          <mat-label>Data od</mat-label>
+          <mat-label>{{ 'dateFrom' | translate }}</mat-label>
           <input
             matInput
             formControlName="dateFrom"
@@ -27,11 +28,11 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #datePickerFrom> </mat-datepicker>
           <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
-            >Wprowadzono nieprawidłowy zakres dat</mat-error
+            >{{ 'invalidDateRange' | translate }}</mat-error
           >
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Data do</mat-label>
+          <mat-label>{{ 'dateTo' | translate }}</mat-label>
           <input
             matInput
             formControlName="dateTo"
@@ -44,13 +45,13 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #datePickerTo></mat-datepicker>
           <mat-error *ngIf="form.hasError('dateFromBiggerThanToError')"
-            >Wprowadzono nieprawidłowy zakres dat</mat-error
+            >{{ 'invalidDateRange' | translate }}</mat-error
           >
         </mat-form-field>
       </div>
       <div class="photo-library--content--search--row">
         <mat-form-field appearance="outline">
-          <mat-label>Temperatura od</mat-label>
+          <mat-label>{{ 'temperatureFrom' | translate }}</mat-label>
           <input
             type="number"
             matInput
@@ -59,11 +60,11 @@
           />
           <mat-icon matSuffix svgIcon="temperature"></mat-icon>
           <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
-            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
+            >{{ 'invalidTemperatureRange' | translate }}</mat-error
           >
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Temperatura do</mat-label>
+          <mat-label>{{ 'temperatureTo' | translate }}</mat-label>
           <input
             type="number"
             matInput
@@ -72,16 +73,18 @@
           />
           <mat-icon matSuffix svgIcon="temperature"></mat-icon>
           <mat-error *ngIf="form.hasError('temperatureFromBiggerThanToError')"
-            >Wprowadzono nieprawidłowy zakres temperatur</mat-error
+            >{{ 'invalidTemperatureRange' | translate }}</mat-error
           >
         </mat-form-field>
       </div>
     </div>
     <div class="photo-library--content--submit" (click)="handleSubmitForm()">
-      <button mat-raised-button type="submit">Wyszukaj</button>
+      <button mat-raised-button type="submit">
+        {{ 'search' | translate }}
+      </button>
     </div>
     <div class="photo-library--content--pagination-refresh">
-      <span>Ilość wyników na jednej stronie</span>
+      <span>{{ 'numberOfResultsAtOnePage' | translate }}</span>
       <mat-button-toggle-group name="pagination" formControlName="pagination">
         <mat-button-toggle [value]="8">8</mat-button-toggle>
         <mat-button-toggle [value]="12">12</mat-button-toggle>
@@ -90,7 +93,7 @@
       </mat-button-toggle-group>
       <button mat-raised-button (click)="handleRefreshImages()">
         <mat-icon svgIcon="refresh"></mat-icon>
-        Odśwież
+        {{ 'refresh' | translate }}
       </button>
     </div>
     <div class="photo-library--content--list" [ngStyle]="listStyle">
@@ -102,7 +105,7 @@
           class="photo-library--content--list--loading-state-wrapper--content"
         >
           <mat-spinner></mat-spinner>
-          <span>Ładowanie zdjęć..</span>
+          <span>{{ 'laodingPhotos' | translate }}</span>
         </div>
       </div>
       <div

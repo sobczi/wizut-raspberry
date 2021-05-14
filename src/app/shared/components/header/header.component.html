@@ -3,7 +3,7 @@
     <img
       alt="wizut-logo"
       src="assets/images/wizut.png"
-      matTooltip="Strona główna"
+      [matTooltip]="'mainPage' | translate"
       routerLink="/shared/homepage"
     />
   </div>
@@ -17,7 +17,7 @@
     >
       <mat-icon
         svgIcon="photo_library"
-        matTooltip="Biblioteka zdjęć"
+        [matTooltip]="'photoLibrary' | translate"
       ></mat-icon>
     </button>
     <!-- (click)="handleStream()" -->
@@ -28,7 +28,10 @@
       routerLink="/logged/video-stream"
       routerLinkActive="secondary-bg"
     >
-      <mat-icon svgIcon="live_tv" matTooltip="Strumień wideo"></mat-icon>
+      <mat-icon
+        svgIcon="live_tv"
+        [matTooltip]="'videoStream' | translate"
+      ></mat-icon>
     </button>
     <button
       *appIsNotLogged
@@ -39,7 +42,7 @@
       routerLink="/shared/login"
       routerLinkActive="secondary-bg"
     >
-      <mat-icon svgIcon="login" matTooltip="Zaloguj się"></mat-icon>
+      <mat-icon svgIcon="login" [matTooltip]="'signIn' | translate"></mat-icon>
     </button>
     <button
       *appIsLogged
@@ -47,7 +50,7 @@
       class="primary-bg"
       (click)="handleLogout()"
     >
-      <mat-icon svgIcon="logout" matTooltip="Wyloguj się"></mat-icon>
+      <mat-icon svgIcon="logout" [matTooltip]="'logout' | translate"></mat-icon>
     </button>
   </div>
 </mat-toolbar>

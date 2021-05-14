@@ -20,6 +20,7 @@ import { ICONS } from '@assets/constants'
 import { AuthModule } from '@auth/auth.module'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreModule } from '@ngrx/store'
+import { TranslateModule } from '@ngx-translate/core'
 import { HeaderComponent, SimpleDialogComponent } from '@shared/components'
 import { SharedFacade } from '@shared/facades/shared.facade'
 import { DialogService, SharedService } from '@shared/services'
@@ -55,6 +56,7 @@ import { LogoutResolver } from './resolvers/logout.resolver'
     MatNativeDateModule,
     MatButtonToggleModule,
     MatProgressSpinnerModule,
+    TranslateModule,
     EffectsModule.forFeature([SharedEffects]),
     StoreModule.forFeature(SharedStoreKey, SharedReducer)
   ],
@@ -77,7 +79,8 @@ import { LogoutResolver } from './resolvers/logout.resolver'
     AuthModule,
     MatDialogModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    TranslateModule
   ],
   providers: [SharedService, SharedFacade, DialogService, LogoutResolver]
 })

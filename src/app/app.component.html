@@ -5,8 +5,12 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-  <select>
-    <option>PL</option>
-    <option>EN</option>
+  <select
+    [(ngModel)]="currentLanguage"
+    (ngModelChange)="handleLanguageChange()"
+  >
+    <option *ngFor="let language of languages" [value]="language"
+      >{{ language }}</option
+    >
   </select>
 </div>

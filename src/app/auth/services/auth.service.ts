@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
-import { Actions, ofType } from '@ngrx/effects'
 import { Router } from '@angular/router'
-import { filter, takeUntil } from 'rxjs/operators'
-import { ReplaySubject, Subject } from 'rxjs'
-
+import { Actions, ofType } from '@ngrx/effects'
+import { TranslateService } from '@ngx-translate/core'
 import { SharedFacade } from '@shared/facades'
 import { DialogService } from '@shared/services'
 import { LogoutRequest } from '@shared/store'
+import { ReplaySubject, Subject } from 'rxjs'
+import { filter, takeUntil } from 'rxjs/operators'
 
 @Injectable()
 export class AuthService implements OnDestroy {
@@ -30,7 +30,8 @@ export class AuthService implements OnDestroy {
     private readonly actions$: Actions,
     private readonly dialogRef: MatDialog,
     private readonly dialogService: DialogService,
-    private readonly sharedFacade: SharedFacade
+    private readonly sharedFacade: SharedFacade,
+    private readonly translateService: TranslateService
   ) {
     this._username = sessionStorage.getItem(this.USERNAME_STORAGE)
     this._access = sessionStorage.getItem(this.ACCESS_STORAGE)
@@ -59,8 +60,10 @@ export class AuthService implements OnDestroy {
       .subscribe(() => {
         this.dialogRef.closeAll()
         this.dialogService.openSimpleDialog({
-          header: 'Wylogowano',
-          content: `Żegnaj, ${this._username}.`
+          header: 'logoutDone',
+          content: `${this.translateService.instant('goodBye')}, ${
+            this._username
+          }.`
         })
         delete this._username
         delete this._access
