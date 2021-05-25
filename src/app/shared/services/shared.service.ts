@@ -24,7 +24,7 @@ export class SharedService {
       )
   }
 
-  logout (): Observable<void> {
-    return this.http.post<any>(environment.logout, {})
+  logout (key: string): Observable<void> {
+    return this.http.post<any>(environment.logout, { key })
   }
 }

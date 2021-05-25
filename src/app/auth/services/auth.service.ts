@@ -23,6 +23,10 @@ export class AuthService implements OnDestroy {
     return this._username
   }
 
+  get key (): string {
+    return this._key
+  }
+
   constructor (
     private readonly router: Router,
     private readonly actions$: Actions,
