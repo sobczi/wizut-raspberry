@@ -23,8 +23,7 @@ export class SharedEffects {
               : LoginResponse({
                   response: true,
                   username,
-                  refresh: response.refresh,
-                  access: response.access
+                  key: response
                 })
           ),
           catchError(() => EMPTY)

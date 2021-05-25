@@ -8,21 +8,18 @@ import { catchError, map } from 'rxjs/operators'
 export class SharedService {
   constructor (private readonly http: HttpClient) {}
 
-  login (
-    username: string,
-    password: string
-  ): Observable<{ refresh: string; access: string } | boolean> {
+  login (username: string, password: string): Observable<string | boolean> {
     if (!environment.production) {
-      return of({ refresh: 'abc', access: 'def' })
+      return of('def')
     }
 
     return this.http
-      .post<{ refresh: string; access: string }>(environment.login, {
+      .post<{ key: string }>(environment.login, {
         username,
         password
       })
       .pipe(
-        map(({ refresh, access }) => ({ refresh, access })),
+        map(({ key }) => key),
         catchError(() => of(false))
       )
   }
