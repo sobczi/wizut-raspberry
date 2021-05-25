@@ -20,13 +20,11 @@
         [matTooltip]="'photoLibrary' | translate"
       ></mat-icon>
     </button>
-    <!-- (click)="handleStream()" -->
     <button
       *appIsLogged
       mat-raised-button
       class="primary-bg"
-      routerLink="/logged/video-stream"
-      routerLinkActive="secondary-bg"
+      (click)="handleStream()"
     >
       <mat-icon
         svgIcon="live_tv"

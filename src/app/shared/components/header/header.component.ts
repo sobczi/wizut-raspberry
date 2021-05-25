@@ -14,6 +14,6 @@ export class HeaderComponent {
   }
 
   handleStream (): void {
-    window.location.href = 'https://www.wp.pl'
+    window.location.href = 'http://82.145.73.141:8000/stream/'
   }
 }
