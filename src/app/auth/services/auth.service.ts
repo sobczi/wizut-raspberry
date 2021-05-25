@@ -14,12 +14,10 @@ export class AuthService implements OnDestroy {
   readonly username$ = new ReplaySubject<string>()
 
   private _username: string
-  private _access: string
-  private _refresh: string
+  private _key: string
 
   private readonly USERNAME_STORAGE = 'USERNAME'
-  private readonly ACCESS_STORAGE = 'ACCESS'
-  private readonly REFRESH_STORAGE = 'REFRESH'
+  private readonly KEY = 'KEY'
   private readonly unsubscribe$ = new Subject<void>()
   get username (): string {
     return this._username
@@ -34,8 +32,7 @@ export class AuthService implements OnDestroy {
     private readonly translateService: TranslateService
   ) {
     this._username = sessionStorage.getItem(this.USERNAME_STORAGE)
-    this._access = sessionStorage.getItem(this.ACCESS_STORAGE)
-    this._refresh = sessionStorage.getItem(this.REFRESH_STORAGE)
+    this._key = sessionStorage.getItem(this.KEY)
     this.username$.next(this._username)
 
     this.sharedFacade.loginResponse$
@@ -43,14 +40,12 @@ export class AuthService implements OnDestroy {
         takeUntil(this.unsubscribe$),
         filter(r => !!r.response)
       )
-      .subscribe(({ username, access, refresh }) => {
+      .subscribe(({ username, key }) => {
         this._username = username
-        this._access = access
-        this._refresh = refresh
+        this._key = key
 
         sessionStorage.setItem(this.USERNAME_STORAGE, username)
-        sessionStorage.setItem(this.ACCESS_STORAGE, access)
-        sessionStorage.setItem(this.REFRESH_STORAGE, refresh)
+        sessionStorage.setItem(this.KEY, key)
 
         this.username$.next(this._username)
       })
@@ -66,8 +61,7 @@ export class AuthService implements OnDestroy {
           }.`
         })
         delete this._username
-        delete this._access
-        delete this._refresh
+        delete this._key
 
         sessionStorage.clear()
 
