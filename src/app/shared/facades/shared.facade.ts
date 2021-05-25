@@ -1,12 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core'
+import { AppStore } from '@app/store'
 import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { takeUntil } from 'rxjs/operators'
-import { Observable, Subject } from 'rxjs'
-
-import { AppStore } from '@app/store'
-import { LoginRequest, LoginResponse, LogoutRequest } from '@shared/store'
 import { LoginResponseArgs } from '@shared/models'
+import { LoginRequest, LoginResponse, LogoutRequest } from '@shared/store'
+import { Observable, Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
 
 @Injectable()
 export class SharedFacade implements OnDestroy {
@@ -33,6 +32,6 @@ export class SharedFacade implements OnDestroy {
   }
 
   dispatchLogoutRequest (): void {
-    this.store.dispatch(LogoutRequest())
+    this.store.dispatch(LogoutRequest({ key: sessionStorage.getItem('KEY') }))
   }
 }

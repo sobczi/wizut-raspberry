@@ -13,4 +13,7 @@ export const LoginResponse = createAction(
 
 export const LogoutResponse = createAction('[Shared Component] Logout Response')
 
-export const LogoutRequest = createAction('[Shared Component] Logout Request')
+export const LogoutRequest = createAction(
+  '[Shared Component] Logout Request',
+  props<{ key: string }>()
+)

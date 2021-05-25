@@ -19,6 +19,7 @@ export class AuthService implements OnDestroy {
   private readonly USERNAME_STORAGE = 'USERNAME'
   private readonly KEY = 'KEY'
   private readonly unsubscribe$ = new Subject<void>()
+
   get username (): string {
     return this._username
   }

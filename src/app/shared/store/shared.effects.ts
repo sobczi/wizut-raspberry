@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { AuthService } from '@auth/services'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { SharedService } from '@shared/services/shared.service'
 import { EMPTY } from 'rxjs'
@@ -36,8 +35,8 @@ export class SharedEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LogoutRequest),
-      mergeMap(() =>
-        this.service.logout(this.authService.key).pipe(
+      mergeMap(({ key }) =>
+        this.service.logout(key).pipe(
           map(() => LogoutResponse()),
           catchError(() => EMPTY)
         )
@@ -47,7 +46,6 @@ export class SharedEffects {
 
   constructor (
     private readonly actions$: Actions,
-    private readonly service: SharedService,
-    private readonly authService: AuthService
+    private readonly service: SharedService
   ) {}
 }
