@@ -58,7 +58,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class PhotoLibraryComponent implements OnDestroy {
   // TODO login debug && fix
-  // TODO stream view, catch redirect with params and logout
 
   currentPage = 1
   listStyle: Record<string, string> = { 'min-height': '712px' }
