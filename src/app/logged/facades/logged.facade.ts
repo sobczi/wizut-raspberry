@@ -32,8 +32,12 @@ export class LoggedFacade implements OnDestroy {
     this.unsubscribe$.complete()
   }
 
-  dispatchFetchImagesRequest (force?: boolean): LoggedFacade {
-    this.store.dispatch(FetchImagesRequest({ force }))
+  dispatchFetchImagesRequest (
+    dateFrom: Date,
+    dateTo: Date,
+    force?: boolean
+  ): LoggedFacade {
+    this.store.dispatch(FetchImagesRequest({ dateFrom, dateTo, force }))
     return this
   }
 

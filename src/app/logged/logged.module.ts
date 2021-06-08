@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { LoggedRoutingModule } from '@logged/logged-routing.module'
 import { OverviewComponent, PhotoLibraryComponent } from '@logged/views'
@@ -23,6 +23,6 @@ import { VideoStreamComponent } from './views/video-stream/video-stream.componen
     EffectsModule.forFeature([LoggedEffects]),
     StoreModule.forFeature(LoggedStoreKey, LoggedReducer)
   ],
-  providers: [LoggedService, LoggedFacade]
+  providers: [LoggedService, LoggedFacade, DatePipe]
 })
 export class LoggedModule {}

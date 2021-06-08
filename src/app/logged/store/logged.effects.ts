@@ -17,7 +17,7 @@ export class LoggedEffects {
   private readonly fetchImages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FetchImagesRequest),
-      mergeMap(({ force }) =>
+      mergeMap(({ dateFrom, dateTo, force }) =>
         this.store.select(selectPhotosTemperatures).pipe(
           mergeMap(photosTemperaturesStore =>
             photosTemperaturesStore && !force
@@ -27,7 +27,7 @@ export class LoggedEffects {
                   })
                 )
               : this.service
-                  .fetchImages()
+                  .fetchImagesByDate(dateFrom, dateTo)
                   .pipe(
                     mergeMap(photosTemperatures =>
                       of(FetchImagesResponse({ photosTemperatures }))

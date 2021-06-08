@@ -3,7 +3,7 @@ import { createAction, props } from '@ngrx/store'
 
 export const FetchImagesRequest = createAction(
   '[Logged Component] Fetch Images Request',
-  props<{ force?: boolean }>()
+  props<{ dateFrom: Date; dateTo: Date; force?: boolean }>()
 )
 
 export const FetchImagesResponse = createAction(

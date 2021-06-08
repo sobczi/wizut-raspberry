@@ -4,7 +4,8 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormGroupDirective
+  FormGroupDirective,
+  Validators
 } from '@angular/forms'
 import {
   DateAdapter,
@@ -57,8 +58,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
   ]
 })
 export class PhotoLibraryComponent implements OnDestroy {
-  // TODO login debug && fix
-
   currentPage = 1
   listStyle: Record<string, string> = { 'min-height': '712px' }
   loadingState = true
@@ -116,10 +115,13 @@ export class PhotoLibraryComponent implements OnDestroy {
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly loggedFacade: LoggedFacade
   ) {
+    const previousDate = new Date()
+    previousDate.setDate(previousDate.getDate() - 1)
+
     this.form = fb.group(
       {
-        dateFrom: [undefined],
-        dateTo: [undefined],
+        dateFrom: [previousDate, Validators.required],
+        dateTo: [new Date(), Validators.required],
         temperatureFrom: [undefined],
         temperatureTo: [undefined],
         pagination: [8]
@@ -168,9 +170,11 @@ export class PhotoLibraryComponent implements OnDestroy {
         next: loadingState => (this.loadingState = loadingState)
       })
 
+    const { dateFrom, dateTo } = this.form.value
+
     this.loggedFacade
       .dispatchUpdateLoadingState(true)
-      .dispatchFetchImagesRequest()
+      .dispatchFetchImagesRequest(dateFrom, dateTo)
       .photosTemperatures$.pipe(
         filter(v => !!v),
         tap(() => this.loggedFacade.dispatchUpdateLoadingState(false))
@@ -214,13 +218,27 @@ export class PhotoLibraryComponent implements OnDestroy {
   }
 
   handleRefreshImages (): void {
-    this.loggedFacade.dispatchFetchImagesRequest(true)
+    const { dateFrom, dateTo } = this.form.value
+    if (!dateFrom || !dateTo) {
+      this.form.markAllAsTouched()
+      return
+    }
+
+    this.loggedFacade.dispatchFetchImagesRequest(dateFrom, dateTo, true)
   }
 
   handleSubmitForm (): void {
     const { dateFrom, dateTo, temperatureFrom, temperatureTo } = this.form.value
+
+    if (!dateFrom || !dateTo) {
+      this.form.markAllAsTouched()
+      return
+    }
+
     const temperatureFromIsNumber = typeof temperatureFrom === 'number'
     const temperatureToIsNumber = typeof temperatureTo === 'number'
+
+    this.loggedFacade.dispatchFetchImagesRequest(dateFrom, dateTo)
 
     if (
       !dateFrom &&
