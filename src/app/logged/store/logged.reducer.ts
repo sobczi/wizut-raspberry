@@ -5,15 +5,24 @@ import { LoggedStore } from './types'
 
 const initialState: LoggedStore = {
   photosTemperatures: undefined,
-  loadingState: true
+  loadingState: true,
+  datesUsed: []
 }
 
 const loggedReducer = createReducer(
   initialState,
-  on(LoggedActions.FetchImagesResponse, (state, { photosTemperatures }) => ({
-    ...state,
-    photosTemperatures
-  })),
+  on(
+    LoggedActions.FetchImagesResponse,
+    (state, { dateFrom, dateTo, photosTemperatures }) => ({
+      ...state,
+      photosTemperatures: state.photosTemperatures
+        ? [...state.photosTemperatures, ...photosTemperatures]
+        : photosTemperatures,
+      datesUsed: state.datesUsed
+        ? [...state.datesUsed, { dateFrom, dateTo }]
+        : [{ dateFrom, dateTo }]
+    })
+  ),
   on(LoggedActions.UpdateLoadingState, (state, { loadingState }) => ({
     ...state,
     loadingState

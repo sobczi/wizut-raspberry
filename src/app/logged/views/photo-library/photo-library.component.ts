@@ -115,13 +115,17 @@ export class PhotoLibraryComponent implements OnDestroy {
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly loggedFacade: LoggedFacade
   ) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
     const previousDate = new Date()
+    previousDate.setHours(0, 0, 0, 0)
     previousDate.setDate(previousDate.getDate() - 1)
 
     this.form = fb.group(
       {
         dateFrom: [previousDate, Validators.required],
-        dateTo: [new Date(), Validators.required],
+        dateTo: [today, Validators.required],
         temperatureFrom: [undefined],
         temperatureTo: [undefined],
         pagination: [8]

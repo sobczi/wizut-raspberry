@@ -30,23 +30,7 @@ export class LoggedService {
       return this.mockImages()
     }
 
-    return this.http.get<DataResponse>(environment.data).pipe(
-      map(response =>
-        response.photos.map(photo => {
-          const foundTemperature = response.temperatures.find(
-            t => t.id === photo.id
-          )
-          return {
-            id: photo.id,
-            imageName: photo.name,
-            imageUrl: `${environment.imageAccess}${photo.image}`,
-            imageDate: new Date(photo.date_taken),
-            firstTemperature: Number(foundTemperature.temperature1),
-            secondTemperature: Number(foundTemperature.temperature2)
-          }
-        })
-      )
-    )
+    return this.getResponse(environment.data)
   }
 
   private getResponse (url: string): Observable<PhotoTemperature[]> {

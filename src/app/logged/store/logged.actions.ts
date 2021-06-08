@@ -8,7 +8,11 @@ export const FetchImagesRequest = createAction(
 
 export const FetchImagesResponse = createAction(
   '[Logged Component] Fetch Images Response',
-  props<{ photosTemperatures: PhotoTemperature[] }>()
+  props<{
+    dateTo: Date
+    dateFrom: Date
+    photosTemperatures: PhotoTemperature[]
+  }>()
 )
 
 export const FetchImagesStore = createAction(

@@ -10,6 +10,11 @@ export const selectPhotosTemperatures = createSelector(
   state => state.photosTemperatures
 )
 
+export const selectUsedDates = createSelector(
+  selectLoggedFeature,
+  state => state.datesUsed
+)
+
 export const selectLoadingState = createSelector(
   selectLoggedFeature,
   state => state.loadingState
